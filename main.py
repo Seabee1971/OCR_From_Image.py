@@ -1,9 +1,8 @@
 import sys
-
+import os
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QMessageBox
-
-import OCR_From_Image as OCR
+from OCR_From_Image import run_OCR
 from SnagIt import SnippingTool
 
 
@@ -16,15 +15,13 @@ class OCRApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.snipping_tool_instance = None
-        self.screenshot_path = None  # Initialize the screenshot_path attribute
+        self.screenshot_path = None
 
         # Load the UI and initialize widgets
         self.fname = None
         self.ocr_result = None
         self._load_ui()
         self._initialize_widgets()
-
-        # Show the app window
         self.show()
 
     def _load_ui(self):
@@ -33,34 +30,28 @@ class OCRApp(QMainWindow):
 
     def _initialize_widgets(self):
         """Initialize and configure widgets."""
-
-        # Widgets
-        self.buttonCapture = self.findChild(QPushButton, "btnCapture")
-        self.buttonOpenFile = self.findChild(QPushButton, "Button_Open_File")
-        self.buttonConvert = self.findChild(QPushButton, "Button_Convert")
-        self.buttonQuit = self.findChild(QPushButton, "Button_Quit")
         self.label = self.findChild(QLabel, "Label_Open_File")
-
-        # Configure widgets
         self.label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse | QtCore.Qt.LinksAccessibleByMouse)
+
+        self.buttonConvert = self.findChild(QPushButton, "Button_Convert")
         self.buttonConvert.hide()
 
-        # Connect signals to slots
-        self.buttonCapture.clicked.connect(self.start_snipping)
-        self.buttonOpenFile.clicked.connect(self.select_file)
-        self.buttonConvert.clicked.connect(self.convert)
-        self.buttonQuit.clicked.connect(exit_program)
+        for button_name, signal_handler in [("btnCapture", self.start_snipping),
+                                            ("Button_Open_File", self.select_file),
+                                            ("Button_Convert", self.convert),
+                                            ("Button_Quit", exit_program)]:
+            button = self.findChild(QPushButton, button_name)
+            button.clicked.connect(signal_handler)
 
     def convert(self):
         """Convert the selected file using OCR."""
         try:
-            self.ocr_result = OCR.run_OCR(self.screenshot_path, r'C:\Program Files\Tesseract-OCR\tesseract',
-                                          'text_extracted.txt')
+            self.ocr_result = run_OCR(self.screenshot_path, r'C:\Program Files\Tesseract-OCR\tesseract',
+                                      'text_extracted.txt')
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to perform OCR with error: {e}")
         else:
-            self.label.setText(self.ocr_result
-                               )
+            self.label.setText(self.ocr_result)
             print(self.ocr_result)
 
     def start_snipping(self):
@@ -72,16 +63,15 @@ class OCRApp(QMainWindow):
         self.screenshot_path = "screenshot.png"
         pixmap.save(self.screenshot_path)
         self.label.setText(f'Screenshot saved at {self.screenshot_path}')
-        self.buttonConvert.show()  # Show the convert button after taking a screenshot
+        self.buttonConvert.show()
 
     def select_file(self):
         """Open a file dialog and select a file for OCR conversion."""
-        file_filter = ("Image Files (*.jpg *.png *.bmp *.jfif *.gif);;"
-                       "All Files (*)")
-        self.fname = QFileDialog.getOpenFileName(self, "Select File to Convert", "", file_filter)
+        file_filter = "Image Files (*.jpg *.png *.bmp *.jfif *.gif);;All Files (*)"
+        self.fname, _ = QFileDialog.getOpenFileName(self, "Select File to Convert", "", file_filter)
 
-        if self.fname[0]:
-            self.screenshot_path = self.fname[0]  # Update the screenshot_path attribute
+        if self.fname:
+            self.screenshot_path = self.fname
             self.label.setText(f'File to Convert = {self.screenshot_path}')
             self.buttonConvert.show()
 

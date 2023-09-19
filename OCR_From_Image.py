@@ -59,7 +59,7 @@ def run_OCR(file_path, tesseract_cmd_path, output_filename):
                 unique_combinations.add(combined_text)
 
     result_string = ''.join(unique_combinations)
-    cleaned_text = clean_text(result_string)
+    cleaned_text = result_string  # clean_text(result_string)
 
     if cleaned_text:
         save_to_file(output_filename, cleaned_text)
