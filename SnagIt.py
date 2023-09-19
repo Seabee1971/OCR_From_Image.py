@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDesktopWidget
-from PyQt5.QtGui import QPixmap, QImage, QPainter, QPen, QBrush, QCursor, QBitmap
 from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtGui import QPainter, QPen, QBrush, QCursor, QBitmap
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
 
 
 class SnippingTool(QMainWindow):
@@ -61,8 +61,8 @@ class SnippingWindow(QMainWindow):
 
         self.setWindowTitle('Snipping Window')
         self.setWindowOpacity(0.3)
-        #self.setWindowFlags(Qt.FramelessWindowHint)
-        #self.setStyleSheet("background-color: rgba(100, 100, 100, 100);")  # Set a semi-transparent background color
+        # self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setStyleSheet("background-color: rgba(100, 100, 100, 100);")  # Set a semi-transparent background color
 
         # Set a custom crosshair cursor using a bitmap
         cursor_pixmap = QBitmap(16, 16)
@@ -87,6 +87,7 @@ class SnippingWindow(QMainWindow):
         # Determine which screen the cursor is on
         desktop = QApplication.desktop()
         self.current_screen = desktop.screenNumber(event.globalPos())
+
     def mouseMoveEvent(self, event):
         self.end = event.pos()
         self.update()
@@ -115,15 +116,8 @@ class SnippingWindow(QMainWindow):
         # Capture the screenshot from the correct screen
         pixmap = screen.grabWindow(QApplication.desktop().winId(), x1, y1, x2 - x1, y2 - y1)
 
-
         self.parent().displayScreenshot(pixmap)
 
     def showEvent(self, event):
         self.setCursor(QCursor(Qt.CrossCursor))
         print("SnippingWindow showEvent called")  # Debug print statement
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     ex = SnippingTool()
-#     ex.show()
-#     sys.exit(app.exec_())

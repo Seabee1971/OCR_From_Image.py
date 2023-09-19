@@ -1,8 +1,12 @@
 import sys
+
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QMessageBox
-from SnagIt import SnippingTool
+
 import OCR_From_Image as OCR
+from SnagIt import SnippingTool
+
+
 def exit_program():
     """Exit the application."""
     sys.exit()

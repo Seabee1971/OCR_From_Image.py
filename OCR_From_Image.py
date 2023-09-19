@@ -1,8 +1,8 @@
-import pytesseract
-import cv2
 import re
-import os
 from time import sleep
+
+import cv2
+import pytesseract
 
 
 def set_tesseract_cmd(tesseract_cmd_path):
@@ -67,4 +67,3 @@ def run_OCR(file_path, tesseract_cmd_path, output_filename):
     else:
         print(f"Failed to perform OCR on image {file_path}")
         return None
-
