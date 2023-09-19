@@ -35,9 +35,11 @@ def spell_check_and_correct(capture):
     words = capture.split()
     misspelled = spell.unknown(words)  # Identify misspelled words
     corrected_capture = []  # Initialize an empty list to store corrected words
+    print("Words:", words)
+    print("Misspelled words:", misspelled)
 
     for word in words:
-        if word in misspelled:
+        if word.lower() in (misspelled_word.lower() for misspelled_word in misspelled):
             # If the word is misspelled, get its suggestions
             suggestions = spell.candidates(word)
             corrected_word = word_freq_test(suggestions)

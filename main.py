@@ -1,22 +1,18 @@
 import sys
-
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QMessageBox
 from SpellChecker import spell_check_and_correct
 from OCR_From_Image import run_OCR
 from SnagIt import SnippingTool
 
-
 def save_to_file(filename, content):
     """Save content to a specified file."""
     with open(filename, 'w') as f:
         f.write(content)
 
-
 def exit_program():
     """Exit the application."""
     sys.exit()
-
 
 class OCRApp(QMainWindow):
     def __init__(self):
@@ -50,19 +46,48 @@ class OCRApp(QMainWindow):
             button = self.findChild(QPushButton, button_name)
             button.clicked.connect(signal_handler)
 
+        # Apply the stylesheet for the Button_Convert button
+        self.buttonConvert.setStyleSheet('''
+            QPushButton {
+                background-color: rgb(0, 0, 255);
+                border-radius: 5px;
+                color: rgb(255, 255, 0);
+                border-style: outset;
+                border-width: 2px;
+                border-color: black;
+            }
+            QPushButton:pressed {
+                background-color: rgb(255, 0, 0);  /* Change color on press */
+            }
+        ''')
+        self.btnCapture.setStyleSheet('''
+                    QPushButton {
+                        background-color: rgb(0, 0, 255);
+                        border-radius: 5px;
+                        color: rgb(255, 255, 0);
+                        border-style: outset;
+                        border-width: 2px;
+                        border-color: black;
+                    }
+                    QPushButton:pressed {
+                        background-color: rgb(255, 0, 0);  /* Change color on press */
+                    }
+                ''')
+
     def convert(self):
         """Convert the selected file using OCR."""
         correctedSentence = []
         try:
             self.ocr_result = run_OCR(self.screenshot_path, r'C:\Program Files\Tesseract-OCR\tesseract',
                                       'text_extracted.txt')
+
             for i, result in enumerate(self.ocr_result.split('\n'), 0):
-                correctedSentence.append(spell_check_and_correct(result))
-                self.label.setText(correctedSentence[-1])
+                if len(result) > 0:
+                    correctedSentence.append(spell_check_and_correct(result))
+                    self.label.setText(correctedSentence[-1])
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to perform OCR with error: {e}")
             pass
-
 
     def start_snipping(self):
         self.snipping_tool_instance = SnippingTool(self)
@@ -85,12 +110,10 @@ class OCRApp(QMainWindow):
             self.label.setText(f'File to Convert = {self.screenshot_path}')
             self.buttonConvert.show()
 
-
 def main():
     app = QApplication(sys.argv)
     ocr_window = OCRApp()
     sys.exit(app.exec_())
-
 
 if __name__ == "__main__":
     main()
