@@ -1,8 +1,8 @@
-import sys
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDesktopWidget
 from PyQt5.QtGui import QPixmap, QImage, QPainter, QPen, QBrush, QCursor, QBitmap
 from PyQt5.QtCore import Qt, QRect
-from PIL import ImageGrab
+
 
 class SnippingTool(QMainWindow):
     def __init__(self, parent=None):
@@ -26,7 +26,22 @@ class SnippingTool(QMainWindow):
 
     def startSnipping(self):
         self.hide()
+        # Add a delay to allow the user to move the cursor to the desired screen
+        QTimer.singleShot(1000, self.openSnippingWindow)
+
+    def openSnippingWindow(self):
         self.snippingWindow = SnippingWindow(self)
+
+        # Get the screen number where the cursor is currently located
+        desktop = QApplication.desktop()
+        current_screen = desktop.screenNumber(QCursor.pos())
+
+        # Get the geometry of the current screen
+        rect = desktop.screenGeometry(current_screen)
+
+        # Set the geometry of the snipping window to cover the current screen
+        self.snippingWindow.setGeometry(rect)
+
         self.snippingWindow.showFullScreen()  # Use showFullScreen() to cover the entire screen
         self.snippingWindow.show()  # Use show() instead of showFullScreen()
 
@@ -85,15 +100,22 @@ class SnippingWindow(QMainWindow):
         x2 = max(self.start.x(), self.end.x())
         y2 = max(self.start.y(), self.end.y())
 
-        # Get the screen number that the snipping window is on
-        #screen_number = QApplication.desktop().screenNumber(self)
-
-        # Get the screen object for the correct screen
         screen = QApplication.screens()[self.current_screen]
-        #screen = QApplication.screens()[screen_number]
+
+        # Adjust the coordinates to be relative to the screen geometry
+        rect = screen.geometry()
+        x1 += rect.x()
+        y1 += rect.y()
+        x2 += rect.x()
+        y2 += rect.y()
+
+        print(f"Screen geometry: {rect}")
+        print(f"Coordinates: x1={x1}, y1={y1}, x2={x2}, y2={y2}")
 
         # Capture the screenshot from the correct screen
-        pixmap = screen.grabWindow(0, x1, y1, x2 - x1, y2 - y1)
+        pixmap = screen.grabWindow(QApplication.desktop().winId(), x1, y1, x2 - x1, y2 - y1)
+
+
         self.parent().displayScreenshot(pixmap)
 
     def showEvent(self, event):
