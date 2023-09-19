@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWid
 class SnippingTool(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        print("SnippingWindow __init__ called")  # Debug print statement
         self.initUI()
 
     def initUI(self):
@@ -61,9 +60,6 @@ class SnippingWindow(QMainWindow):
 
         self.setWindowTitle('Snipping Window')
         self.setWindowOpacity(0.3)
-        # self.setWindowFlags(Qt.FramelessWindowHint)
-        # self.setStyleSheet("background-color: rgba(100, 100, 100, 100);")  # Set a semi-transparent background color
-
         # Set a custom crosshair cursor using a bitmap
         cursor_pixmap = QBitmap(16, 16)
         cursor_pixmap.clear()
@@ -110,9 +106,6 @@ class SnippingWindow(QMainWindow):
         x2 += rect.x()
         y2 += rect.y()
 
-        print(f"Screen geometry: {rect}")
-        print(f"Coordinates: x1={x1}, y1={y1}, x2={x2}, y2={y2}")
-
         # Capture the screenshot from the correct screen
         pixmap = screen.grabWindow(QApplication.desktop().winId(), x1, y1, x2 - x1, y2 - y1)
 
@@ -120,4 +113,4 @@ class SnippingWindow(QMainWindow):
 
     def showEvent(self, event):
         self.setCursor(QCursor(Qt.CrossCursor))
-        print("SnippingWindow showEvent called")  # Debug print statement
+

@@ -20,10 +20,7 @@ def clean_text(raw_text):
     return re.sub(r'[^a-zA-Z0-9\s]', '', raw_text)
 
 
-def save_to_file(filename, content):
-    """Save content to a specified file."""
-    with open(filename, 'w') as f:
-        f.write(content)
+
 
 
 def process_image(file_path):
@@ -42,6 +39,7 @@ def process_image(file_path):
 
 def run_OCR(file_path, tesseract_cmd_path, output_filename):
     """Run OCR on the image and save the result to a file."""
+    cleaned_text = ""
     set_tesseract_cmd(tesseract_cmd_path)
     processed_images = process_image(file_path)
 
@@ -59,11 +57,9 @@ def run_OCR(file_path, tesseract_cmd_path, output_filename):
                 unique_combinations.add(combined_text)
 
     result_string = ''.join(unique_combinations)
-    cleaned_text = result_string  # clean_text(result_string)
 
-    if cleaned_text:
-        save_to_file(output_filename, cleaned_text)
-        return cleaned_text
+    if result_string:
+        return result_string
     else:
         print(f"Failed to perform OCR on image {file_path}")
         return None
