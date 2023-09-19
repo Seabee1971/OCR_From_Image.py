@@ -1,9 +1,14 @@
 import sys
+import traceback
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QMessageBox
 from SpellChecker import spell_check_and_correct
 from OCR_From_Image import run_OCR
 from SnagIt import SnippingTool
+
+# Move the styles to a separate CSS file and load it here
+with open('styles.css', 'r') as f:
+    STYLESHEET = f.read()
 
 def save_to_file(filename, content):
     """Save content to a specified file."""
@@ -46,47 +51,24 @@ class OCRApp(QMainWindow):
             button = self.findChild(QPushButton, button_name)
             button.clicked.connect(signal_handler)
 
-        # Apply the stylesheet for the Button_Convert button
-        self.buttonConvert.setStyleSheet('''
-            QPushButton {
-                background-color: rgb(0, 0, 255);
-                border-radius: 5px;
-                color: rgb(255, 255, 0);
-                border-style: outset;
-                border-width: 2px;
-                border-color: black;
-            }
-            QPushButton:pressed {
-                background-color: rgb(255, 0, 0);  /* Change color on press */
-            }
-        ''')
-        self.btnCapture.setStyleSheet('''
-                    QPushButton {
-                        background-color: rgb(0, 0, 255);
-                        border-radius: 5px;
-                        color: rgb(255, 255, 0);
-                        border-style: outset;
-                        border-width: 2px;
-                        border-color: black;
-                    }
-                    QPushButton:pressed {
-                        background-color: rgb(255, 0, 0);  /* Change color on press */
-                    }
-                ''')
+        # Apply the stylesheet for the buttons
+        self.buttonConvert.setStyleSheet(STYLESHEET)
+        self.findChild(QPushButton, "btnCapture").setStyleSheet(STYLESHEET)
 
     def convert(self):
         """Convert the selected file using OCR."""
-        correctedSentence = []
+        corrected_sentence = []
         try:
-            self.ocr_result = run_OCR(self.screenshot_path, r'C:\Program Files\Tesseract-OCR\tesseract',
+            self.ocr_result = run_OCR(self.screenshot_path, r'C:\\Program Files\\Tesseract-OCR\\tesseract',
                                       'text_extracted.txt')
 
             for i, result in enumerate(self.ocr_result.split('\n'), 0):
                 if len(result) > 0:
-                    correctedSentence.append(spell_check_and_correct(result))
-                    self.label.setText(correctedSentence[-1])
+                    corrected_sentence.append(spell_check_and_correct(result))
+                    self.label.setText(corrected_sentence[-1])
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to perform OCR with error: {e}")
+            traceback.print_exc()
             pass
 
     def start_snipping(self):

@@ -1,15 +1,32 @@
 import csv
+import logging
 
 from spellchecker import SpellChecker
 
+# Configure logging
+logging.basicConfig(filename='spell_checker.log', level=logging.DEBUG)
 
-# Load word frequencies from the CSV file into a dictionary
-def load_word_frequencies():
+
+def load_word_frequencies(filepath='unigram_freq.csv'):
+    """Load word frequencies from a CSV file into a dictionary.
+
+    Args:
+        filepath (str): The path to the CSV file containing word frequencies.
+
+    Returns:
+        dict: A dictionary with words as keys and their frequencies as values.
+    """
     word_freq_dict = {}
-    with open('unigram_freq.csv', 'r') as wf:
-        freqList = csv.DictReader(wf)
-        for row in freqList:
-            word_freq_dict[row["word"]] = int(row["count"])
+    try:
+        with open(filepath, 'r') as wf:
+            freqList = csv.DictReader(wf)
+            for row in freqList:
+                word_freq_dict[row["word"]] = int(row["count"])
+    except FileNotFoundError:
+        logging.error(f"Could not find the file at {filepath}")
+    except Exception as e:
+        logging.error(f"An error occurred while loading word frequencies: {e}")
+
     return word_freq_dict
 
 
@@ -17,41 +34,52 @@ word_freq_dict = load_word_frequencies()
 
 
 def word_freq_test(suggestions):
-    highScoringWord = None  # Initialize to None
+    """Find the highest frequency word from the suggestions based on a pre-loaded dictionary.
+
+    Args:
+        suggestions (list): A list of suggested words.
+
+    Returns:
+        str: The highest frequency word from the suggestions.
+    """
+    highScoringWord = None
     currentCount = 0
 
     for word in suggestions:
         if word in word_freq_dict:
-            count = word_freq_dict[word]  # Get word count from the pre-loaded dictionary
+            count = word_freq_dict[word]
             if count > currentCount:
-                highScoringWord = word  # Update with the current word
+                highScoringWord = word
                 currentCount = count
 
-    return highScoringWord  # Return the word with the highest frequency
+    return highScoringWord
 
 
 def spell_check_and_correct(capture):
+    """Perform spell checking and correction on a given text.
+
+    Args:
+        capture (str): The text to be spell-checked and corrected.
+
+    Returns:
+        str: The corrected text.
+    """
     spell = SpellChecker()
     words = capture.split()
-    misspelled = spell.unknown(words)  # Identify misspelled words
-    corrected_capture = []  # Initialize an empty list to store corrected words
-    print("Words:", words)
-    print("Misspelled words:", misspelled)
+    misspelled = spell.unknown(words)
+
+    corrected_capture = []
 
     for word in words:
         if word.lower() in (misspelled_word.lower() for misspelled_word in misspelled):
-            # If the word is misspelled, get its suggestions
             suggestions = spell.candidates(word)
             corrected_word = word_freq_test(suggestions)
             if corrected_word:
                 corrected_capture.append(corrected_word)
             else:
-                # If no suggestions, keep the original word
                 corrected_capture.append(word)
         else:
-            # If the word is not misspelled, keep it as is
             corrected_capture.append(word)
 
     corrected_sentence = " ".join(corrected_capture)
     return corrected_sentence
-

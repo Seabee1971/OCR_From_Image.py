@@ -1,8 +1,12 @@
 import re
+import logging
+from itertools import combinations
 from time import sleep
-
 import cv2
 import pytesseract
+
+# Configure logging
+logging.basicConfig(filename='ocr_errors.log', level=logging.ERROR)
 
 
 def set_tesseract_cmd(tesseract_cmd_path):
@@ -20,7 +24,16 @@ def clean_text(raw_text):
     return re.sub(r'[^a-zA-Z0-9\s]', '', raw_text)
 
 
+def get_unique_combinations(texts):
+    """Get unique combinations of the given texts.
 
+    Args:
+        texts (list of str): The list of texts to find unique combinations for.
+
+    Returns:
+        set: A set of unique combinations of the input texts.
+    """
+    return {''.join(sorted(comb)) for comb in combinations(texts, 2)}
 
 
 def process_image(file_path):
@@ -38,28 +51,30 @@ def process_image(file_path):
 
 
 def run_OCR(file_path, tesseract_cmd_path, output_filename):
-    """Run OCR on the image and save the result to a file."""
-    cleaned_text = ""
+    """Run OCR on the image and save the result to a file.
+
+    Args:
+        file_path (str): The path to the image file.
+        tesseract_cmd_path (str): The path to the Tesseract executable.
+        output_filename (str): The name of the output file to save the OCR results.
+
+    Returns:
+        str: The OCR result string, or None if an error occurs.
+    """
     set_tesseract_cmd(tesseract_cmd_path)
     processed_images = process_image(file_path)
 
     if not processed_images:
-        print(f"Failed to process image {file_path}")
+        logging.error(f"Failed to process image {file_path}")
         return None
 
     extracted_texts = [extract_text_from_image(img) for img in processed_images]
-    unique_combinations = set()
-
-    for i, text1 in enumerate(extracted_texts):
-        for j, text2 in enumerate(extracted_texts):
-            if i != j:
-                combined_text = ''.join(sorted([text1, text2]))
-                unique_combinations.add(combined_text)
+    unique_combinations = get_unique_combinations(extracted_texts)
 
     result_string = ''.join(unique_combinations)
 
     if result_string:
         return result_string
     else:
-        print(f"Failed to perform OCR on image {file_path}")
+        logging.error(f"Failed to perform OCR on image {file_path}")
         return None

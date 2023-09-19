@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
-    <height>720</height>
+    <width>1479</width>
+    <height>898</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,9 +52,15 @@ border-color:black;
      <rect>
       <x>320</x>
       <y>180</y>
-      <width>841</width>
-      <height>331</height>
+      <width>1141</width>
+      <height>681</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>14</pointsize>
+     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);
@@ -71,7 +77,7 @@ color: rgb(0, 0, 255);
      <number>3</number>
     </property>
     <property name="text">
-     <string>File to be Converted:</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="Button_Convert">
@@ -156,13 +162,55 @@ border-color:black;
 Capture</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>20</y>
+      <width>261</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Stardate_81316</family>
+      <pointsize>84</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Grab it! </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>100</y>
+      <width>291</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Stardate_81316</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Take a Screenshot and 
+Convert it any word to text</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1250</width>
+     <width>1479</width>
      <height>21</height>
     </rect>
    </property>
