@@ -61,7 +61,7 @@ class OCRApp(QMainWindow):
 
     def start_snipping(self):
         self.snipping_tool_instance = SnippingTool(self)
-        self.snipping_tool_instance.show()
+        self.snipping_tool_instance.startSnipping()
 
     def handle_screenshot(self, pixmap):
         """Handle the captured screenshot."""
