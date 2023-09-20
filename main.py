@@ -1,23 +1,28 @@
 import sys
 import traceback
+
 from PyQt5 import uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QMessageBox
-from SpellChecker import spell_check_and_correct
+
 from OCR_From_Image import run_OCR
 from SnagIt import SnippingTool
+from Spell_Checker import spell_check_and_correct
 
 # Move the styles to a separate CSS file and load it here
 with open('styles.css', 'r') as f:
     STYLESHEET = f.read()
+
 
 def save_to_file(filename, content):
     """Save content to a specified file."""
     with open(filename, 'w') as f:
         f.write(content)
 
+
 def exit_program():
     """Exit the application."""
     sys.exit()
+
 
 class OCRApp(QMainWindow):
     def __init__(self):
@@ -92,10 +97,12 @@ class OCRApp(QMainWindow):
             self.label.setText(f'File to Convert = {self.screenshot_path}')
             self.buttonConvert.show()
 
+
 def main():
     app = QApplication(sys.argv)
     ocr_window = OCRApp()
     sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     main()

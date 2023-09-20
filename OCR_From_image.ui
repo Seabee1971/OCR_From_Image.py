@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1479</width>
+    <width>1505</width>
     <height>898</height>
    </rect>
   </property>
@@ -165,7 +165,7 @@ Capture</string>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>850</x>
+      <x>890</x>
       <y>20</y>
       <width>261</width>
       <height>71</height>
@@ -184,9 +184,9 @@ Capture</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>100</y>
-      <width>291</width>
+      <x>810</x>
+      <y>110</y>
+      <width>421</width>
       <height>71</height>
      </rect>
     </property>
@@ -197,8 +197,33 @@ Capture</string>
      </font>
     </property>
     <property name="text">
-     <string>Take a Screenshot and 
+     <string>Grab any text from your screen and 
 Convert it any word to text</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>750</y>
+      <width>301</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Stardate_81316</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 255);</string>
+    </property>
+    <property name="text">
+     <string>Written by Shane Platt</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -210,7 +235,7 @@ Convert it any word to text</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1479</width>
+     <width>1505</width>
      <height>21</height>
     </rect>
    </property>

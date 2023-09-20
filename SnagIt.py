@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QTimer, Qt, QRect
-from PyQt5.QtGui import QPainter, QPen, QBrush, QCursor, QBitmap
+from PyQt5.QtGui import QPainter, QPen, QCursor, QBitmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
+
 
 class SnippingTool(QMainWindow):
     def __init__(self, parent=None):
@@ -36,6 +37,7 @@ class SnippingTool(QMainWindow):
         self.show()
         self.parent().handle_screenshot(pixmap)
 
+
 class SnippingWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -61,7 +63,6 @@ class SnippingWindow(QMainWindow):
         if self.start:
             painter = QPainter(self)
             painter.setPen(QPen(Qt.red, 1.5, Qt.SolidLine))
-            #painter.setBrush(QBrush(Qt.red, Qt.DiagCrossPattern))
             painter.drawRect(QRect(self.start, self.end))
 
     def mousePressEvent(self, event):

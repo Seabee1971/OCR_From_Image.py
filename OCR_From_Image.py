@@ -1,7 +1,8 @@
-import re
 import logging
+import re
 from itertools import combinations
 from time import sleep
+
 import cv2
 import pytesseract
 
